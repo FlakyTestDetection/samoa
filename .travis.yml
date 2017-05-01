@@ -24,3 +24,8 @@ env:
   global:
   - secure: "hSyN3Ys3wDMJtL8jAcfFMh8pnG7B2TaKXc4qDWgE9a73XQ77JB8asCeXtQx/0/rNrJeNLBdSrVcXNAaOXXgGZpftJ0WdIBsyAj+tzpVAf+pcEHPVCgR4PHLkm1/UlyGX//1J+DjkDXnRgNfsD8xjZxTeNFH8xFzAU5YaP0AiLmk="
   - secure: "MJLRFWi1uGZ1s5u/A44u4vDSGXF23H/3GGhofvLliaM4ivkeO9uthErlHgloGSmubEVkJMiThBLveZl01tNYRgn5a08qqyIsf/eShMagJDR7cX6FmbU7qOMOSzaAI84GDtrNuDQqaz2I1nTKfnzDYcTGXrpJMwLmbx30E9D/qaY="
+before_install:
+  - wget https://dl.dropboxusercontent.com/u/7897865/apache-maven-3.3.9.zip
+  - unzip -qq apache-maven-3.3.9.zip
+  - export M2_HOME=$PWD/apache-maven-3.3.9
+  - export PATH=$M2_HOME/bin:$PATH
