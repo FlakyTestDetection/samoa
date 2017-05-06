@@ -1,5 +1,12 @@
-language: java
-
+before_install:
+- wget https://dl.dropboxusercontent.com/u/7897865/apache-maven-3.3.9.zip
+- unzip -qq apache-maven-3.3.9.zip
+- export M2_HOME=$PWD/apache-maven-3.3.9
+- export PATH=$M2_HOME/bin:$PATH
+env:
+  global:
+  - secure: hSyN3Ys3wDMJtL8jAcfFMh8pnG7B2TaKXc4qDWgE9a73XQ77JB8asCeXtQx/0/rNrJeNLBdSrVcXNAaOXXgGZpftJ0WdIBsyAj+tzpVAf+pcEHPVCgR4PHLkm1/UlyGX//1J+DjkDXnRgNfsD8xjZxTeNFH8xFzAU5YaP0AiLmk=
+  - secure: MJLRFWi1uGZ1s5u/A44u4vDSGXF23H/3GGhofvLliaM4ivkeO9uthErlHgloGSmubEVkJMiThBLveZl01tNYRgn5a08qqyIsf/eShMagJDR7cX6FmbU7qOMOSzaAI84GDtrNuDQqaz2I1nTKfnzDYcTGXrpJMwLmbx30E9D/qaY=
 install:
 - git clone https://github.com/apache/incubator-s4.git
 - cd incubator-s4
@@ -11,21 +18,12 @@ install:
 - ./gradlew s4-tools::installApp
 - cd ..
 - echo "<settings><servers><server><id>sonatype-nexus-snapshots</id><username>${SOSS_USERNAME}</username><password>${SOSS_PASSWORD}</password></server></servers></settings>" > ${HOME}/.m2/settings.xml
-#- cat ${HOME}/.m2/settings.xml
-
-script: if [[ "$TRAVIS_SECURE_ENV_VARS" == "true" && "$TRAVIS_PULL_REQUEST" == "false" ]]; then CMD=deploy; else CMD=install; fi; echo $CMD; mvn -B -Pall $CMD
-
+language: java
 notifications:
-  email:
-  on_success: never
-  on_failure: change
-
-env:
-  global:
-  - secure: "hSyN3Ys3wDMJtL8jAcfFMh8pnG7B2TaKXc4qDWgE9a73XQ77JB8asCeXtQx/0/rNrJeNLBdSrVcXNAaOXXgGZpftJ0WdIBsyAj+tzpVAf+pcEHPVCgR4PHLkm1/UlyGX//1J+DjkDXnRgNfsD8xjZxTeNFH8xFzAU5YaP0AiLmk="
-  - secure: "MJLRFWi1uGZ1s5u/A44u4vDSGXF23H/3GGhofvLliaM4ivkeO9uthErlHgloGSmubEVkJMiThBLveZl01tNYRgn5a08qqyIsf/eShMagJDR7cX6FmbU7qOMOSzaAI84GDtrNuDQqaz2I1nTKfnzDYcTGXrpJMwLmbx30E9D/qaY="
-before_install:
-  - wget https://dl.dropboxusercontent.com/u/7897865/apache-maven-3.3.9.zip
-  - unzip -qq apache-maven-3.3.9.zip
-  - export M2_HOME=$PWD/apache-maven-3.3.9
-  - export PATH=$M2_HOME/bin:$PATH
+  email: false
+  slack:
+    rooms: flakycov:U2MeVOPjdi4up1U793ubeIUZ
+    template:
+    - Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository}@%{branch} by %{author} %{result} in %{duration}
+    - 'dashbot: %{repository_name} %{build_id}'
+script: if [[ "$TRAVIS_SECURE_ENV_VARS" == "true" && "$TRAVIS_PULL_REQUEST" == "false" ]]; then CMD=deploy; else CMD=install; fi; echo $CMD; mvn -B -Pall $CMD
